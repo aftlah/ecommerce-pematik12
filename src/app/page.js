@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import Image from 'next/image'
 
 const products = [
   { id: 1, name: "Smartphone XYZ", price: 2999000, image: "/placeholder.svg?height=200&width=200", rating: 4.5, sold: 1000 },
@@ -21,7 +22,6 @@ const products = [
   { id: 6, name: "Speaker Bluetooth", price: 399000, image: "/placeholder.svg?height=200&width=200", rating: 4.2, sold: 1500 },
 ]
 
-// Daftar kategori
 const categories = [
   "Elektronik", "Fashion", "Kesehatan & Kecantikan", "Rumah & Dapur", "Olahraga", "Otomotif"
 ]
@@ -95,7 +95,7 @@ export default function TokopediaLikePage() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 sm:gap-6">
           {products.map((product) => (
             <Card key={product.id} className="overflow-hidden">
-              <img src={product.image} alt={product.name} className="object-cover w-full h-32 sm:h-40" />
+              <Image src={product.image} alt={product.name} width={100} height={100} className="object-cover w-full h-32 sm:h-40" />
               <CardContent className="p-3 sm:p-4">
                 <h3 className="mb-1 text-xs font-semibold truncate sm:text-sm sm:mb-2">{product.name}</h3>
                 <p className="mb-1 text-sm font-bold sm:text-lg sm:mb-2">Rp {product.price.toLocaleString('id-ID')}</p>
