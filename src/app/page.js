@@ -1,160 +1,183 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, ShoppingCart, User, Menu, ChevronDown } from 'lucide-react'
+import { ShoppingCart, Menu, X, ArrowRight, Clock, Utensils, Users } from 'lucide-react'
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Toaster } from "@/components/ui/toaster"
 import Image from 'next/image'
 
 const products = [
-  { id: 1, name: "Smartphone XYZ", price: 2999000, image: "/placeholder.svg?height=200&width=200", rating: 4.5, sold: 1000 },
-  { id: 2, name: "Laptop ABC", price: 8999000, image: "/placeholder.svg?height=200&width=200", rating: 4.7, sold: 500 },
-  { id: 3, name: "Headphone 123", price: 599000, image: "/placeholder.svg?height=200&width=200", rating: 4.3, sold: 2000 },
-  { id: 4, name: "Smart Watch", price: 1299000, image: "/placeholder.svg?height=200&width=200", rating: 4.6, sold: 750 },
-  { id: 5, name: "Kamera DSLR", price: 5999000, image: "/placeholder.svg?height=200&width=200", rating: 4.8, sold: 300 },
-  { id: 6, name: "Speaker Bluetooth", price: 399000, image: "/placeholder.svg?height=200&width=200", rating: 4.2, sold: 1500 },
+  { id: 1, name: 'Paket Nasi Kotak', price: 25000, image: '/public/images/paket-nasi.jpeg' },
+  { id: 2, name: 'Paket Ikan Bakar', price: 50000, image: '/public/images/paket-nasi.jpeg' },
+  { id: 3, name: 'Paket Snack Box', price: 15000, image: '/public/images/paket-nasi.jpeg' },
+  { id: 4, name: 'Paket Ayam Bakar', price: 100000, image: '/public/images/paket-nasi.jpeg' },
 ]
 
-const categories = [
-  "Elektronik", "Fashion", "Kesehatan & Kecantikan", "Rumah & Dapur", "Olahraga", "Otomotif"
-]
+export default function HomePage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [cart, setCart] = useState([])
+  const [email, setEmail] = useState('')
 
-export default function TokopediaLikePage() {
-  const [searchTerm, setSearchTerm] = useState("")
+  const addToCart = (product) => {
+    setCart([...cart, product])
+    toast({
+      title: "Produk ditambahkan",
+      description: `${product.name} telah ditambahkan ke keranjang.`,
+    })
+  }
+
+  const handleSubscribe = (e) => {
+    e.preventDefault()
+    toast({
+      title: "Berlangganan berhasil",
+      description: `Anda telah berlangganan dengan email: ${email}`,
+    })
+    setEmail('')
+  }
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+    setIsMenuOpen(false)
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="p-4 text-white bg-green-500">
-        <div className="container flex flex-col items-center justify-between mx-auto space-y-4 md:flex-row md:space-y-0">
-          <div className="flex flex-col items-center w-full space-y-4 md:flex-row md:space-y-0 md:space-x-4 md:w-auto">
-            <h1 className="text-2xl font-bold">TokopediaLike</h1>
-            <div className="relative w-full md:w-96">
-              <Input
-                type="text"
-                placeholder="Cari di TokopediaLike"
-                className="w-full pl-10 text-black"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <Search className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-            </div>
-          </div>
+    <div className="flex flex-col min-h-screen">
+      <header className="sticky top-0 z-10 bg-white shadow">
+        <div className="container flex items-center justify-between px-4 py-4 mx-auto">
+          <h1 className="text-2xl font-bold">WaroengKuh</h1>
+          <nav className="hidden space-x-4 md:flex">
+            <button onClick={() => scrollToSection('beranda')} className="hover:text-primary">Beranda</button>
+            <button onClick={() => scrollToSection('menu')} className="hover:text-primary">Menu</button>
+            <button onClick={() => scrollToSection('tentang-kami')} className="hover:text-primary">Tentang Kami</button>
+            <button onClick={() => scrollToSection('kontak')} className="hover:text-primary">Kontak</button>
+          </nav>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost">
-              <ShoppingCart className="mr-2" />
-              <span className="hidden sm:inline">Keranjang</span>
+            <Button variant="outline" size="icon" onClick={() => toast({ title: "Keranjang Belanja", description: `Jumlah item: ${cart.length}` })}>
+              <ShoppingCart className="w-5 h-5" />
+              <span className="sr-only">Keranjang Belanja</span>
+              {cart.length > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">
+                  {cart.length}
+                </span>
+              )}
             </Button>
-            <Button variant="ghost">
-              <User className="mr-2" />
-              <span className="hidden sm:inline">Akun Saya</span>
+            <Button variant="outline" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <span className="sr-only">Menu</span>
             </Button>
           </div>
         </div>
+        {isMenuOpen && (
+          <nav className="flex flex-col px-4 py-2 space-y-2 bg-white md:hidden">
+            <button onClick={() => scrollToSection('beranda')} className="hover:text-primary">Beranda</button>
+            <button onClick={() => scrollToSection('menu')} className="hover:text-primary">Menu</button>
+            <button onClick={() => scrollToSection('tentang-kami')} className="hover:text-primary">Tentang Kami</button>
+            <button onClick={() => scrollToSection('kontak')} className="hover:text-primary">Kontak</button>
+          </nav>
+        )}
       </header>
 
-      {/* Kategori */}
-      <nav className="overflow-x-auto bg-white shadow">
-        <div className="container py-2 mx-auto">
-          <ul className="flex space-x-6 whitespace-nowrap">
-            {categories.map((category, index) => (
-              <li key={index}>
-                <Button variant="ghost" className="text-sm">
-                  {category}
-                </Button>
-              </li>
-            ))}
-            <li>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-sm">
-                    Kategori Lainnya <ChevronDown className="w-4 h-4 ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>Buku</DropdownMenuItem>
-                  <DropdownMenuItem>Mainan & Hobi</DropdownMenuItem>
-                  <DropdownMenuItem>Pertukangan</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </li>
-          </ul>
+      <section id="beranda" className="py-16 bg-primary text-primary-foreground">
+        <div className="container px-4 mx-auto">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="mb-4 text-4xl font-bold">Katering Berkualitas untuk Setiap Acara Anda</h1>
+            <p className="mb-8 text-xl">Nikmati hidangan lezat dan pelayanan prima untuk berbagai acara, dari pesta ulang tahun hingga pernikahan.</p>
+            <Button size="lg" className="bg-white text-primary hover:bg-gray-100" onClick={() => scrollToSection('menu')}>
+              Pesan Sekarang <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </div>
         </div>
-      </nav>
+      </section>
 
-      {/* Konten Utama */}
-      <main className="container py-8 mx-auto">
-        <h2 className="mb-6 text-2xl font-bold">Produk Pilihan</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 sm:gap-6">
+      <section id="tentang-kami" className="py-16 bg-gray-50">
+        <div className="container px-4 mx-auto">
+          <h2 className="mb-12 text-3xl font-bold text-center">Mengapa Memilih Kami?</h2>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="flex flex-col items-center text-center">
+              <div className="p-4 mb-4 rounded-full bg-primary text-primary-foreground">
+                <Utensils className="w-8 h-8" />
+              </div>
+              <h3 className="mb-2 text-xl font-semibold">Menu Beragam</h3>
+              <p>Pilihan menu yang luas untuk memenuhi selera semua tamu Anda.</p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <div className="p-4 mb-4 rounded-full bg-primary text-primary-foreground">
+                <Clock className="w-8 h-8" />
+              </div>
+              <h3 className="mb-2 text-xl font-semibold">Tepat Waktu</h3>
+              <p>Kami menjamin ketepatan waktu pengiriman untuk kenyamanan acara Anda.</p>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <div className="p-4 mb-4 rounded-full bg-primary text-primary-foreground">
+                <Users className="w-8 h-8" />
+              </div>
+              <h3 className="mb-2 text-xl font-semibold">Pelayanan Prima</h3>
+              <p>Tim kami siap memberikan pelayanan terbaik untuk kepuasan Anda.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <main id="menu" className="container flex-grow px-4 py-8 mx-auto">
+        <h2 className="mb-6 text-3xl font-bold text-center">Menu Favorit Kami</h2>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
-            <Card key={product.id} className="overflow-hidden">
-              <Image src={product.image} alt={product.name} width={100} height={100} className="object-cover w-full h-32 sm:h-40" />
-              <CardContent className="p-3 sm:p-4">
-                <h3 className="mb-1 text-xs font-semibold truncate sm:text-sm sm:mb-2">{product.name}</h3>
-                <p className="mb-1 text-sm font-bold sm:text-lg sm:mb-2">Rp {product.price.toLocaleString('id-ID')}</p>
-                <div className="flex items-center text-xs text-gray-500 sm:text-sm">
-                  <span className="mr-2">⭐ {product.rating}</span>
-                  <span>| {product.sold} terjual</span>
-                </div>
+            <Card key={product.id}>
+              <CardHeader>
+                <Image src={product.image} alt={product.name} className="object-cover w-full h-48 rounded-t-lg" width={50} height={50}/>
+              </CardHeader>
+              <CardContent>
+                <CardTitle>{product.name}</CardTitle>
+                <p className="mt-2 text-lg font-semibold">Rp {product.price.toLocaleString()}</p>
               </CardContent>
-              <CardFooter className="p-3 pt-0 sm:p-4">
-                <Button className="w-full text-xs sm:text-sm">Beli Sekarang</Button>
+              <CardFooter>
+                <Button className="w-full" onClick={() => addToCart(product)}>Tambah ke Keranjang</Button>
               </CardFooter>
             </Card>
           ))}
         </div>
+        <div className="mt-12 text-center">
+          <Button size="lg" variant="outline" onClick={() => toast({ title: "Lihat Semua Menu", description: "Fitur ini akan segera hadir!" })}>
+            Lihat Semua Menu <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
+        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="py-8 text-white bg-gray-800">
-        <div className="container grid grid-cols-2 gap-8 mx-auto sm:grid-cols-2 md:grid-cols-4">
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">Layanan Pelanggan</h3>
-            <ul className="space-y-2">
-              <li>Bantuan</li>
-              <li>Metode Pembayaran</li>
-              <li>Lacak Pesanan</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">Jual</h3>
-            <ul className="space-y-2">
-              <li>Pusat Edukasi Seller</li>
-              <li>Mitra Toppers</li>
-              <li>Daftar Official Store</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">Tentang TokopediaLike</h3>
-            <ul className="space-y-2">
-              <li>Tentang Kami</li>
-              <li>Karir</li>
-              <li>Blog</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">Ikuti Kami</h3>
-            <div className="flex space-x-4">
-              <Button variant="outline" size="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
-                <span className="sr-only">Facebook</span>
-              </Button>
-              <Button variant="outline" size="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
-                <span className="sr-only">Instagram</span>
-              </Button>
-              <Button variant="outline" size="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-twitter"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" /></svg>
-                <span className="sr-only">Twitter</span>
-              </Button>
+      <footer id="kontak" className="mt-12 bg-gray-100">
+        <div className="container px-4 py-8 mx-auto">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div>
+              <h3 className="mb-4 text-lg font-semibold">Tentang Kami</h3>
+              <p>WaroengKuh menyediakan berbagai pilihan menu lezat untuk berbagai acara Anda.</p>
             </div>
+            <div>
+              <h3 className="mb-4 text-lg font-semibold">Hubungi Kami</h3>
+              <p>Email: info@waroengkuh.com</p>
+              <p>Telepon: (021) 1234-5678</p>
+            </div>
+            <div>
+              <h3 className="mb-4 text-lg font-semibold">Berlangganan</h3>
+              <p className="mb-2">Dapatkan info terbaru dan penawaran spesial</p>
+              <form className="flex" onSubmit={handleSubscribe}>
+                <Input 
+                  type="email" 
+                  placeholder="Alamat email Anda" 
+                  className="mr-2" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Button type="submit">Langganan</Button>
+              </form>
+            </div>
+          </div>
+          <div className="mt-8 text-center">
+            <p>&copy; 2023 WaroengKuh. Hak Cipta Dilindungi.</p>
           </div>
         </div>
       </footer>
