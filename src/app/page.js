@@ -9,10 +9,10 @@ import { Toaster } from "@/components/ui/toaster"
 import Image from 'next/image'
 
 const products = [
-  { id: 1, name: 'Paket Nasi Kotak', price: 25000, image: '/public/images/paket-nasi.jpeg' },
-  { id: 2, name: 'Paket Ikan Bakar', price: 50000, image: '/public/images/paket-nasi.jpeg' },
-  { id: 3, name: 'Paket Snack Box', price: 15000, image: '/public/images/paket-nasi.jpeg' },
-  { id: 4, name: 'Paket Ayam Bakar', price: 100000, image: '/public/images/paket-nasi.jpeg' },
+  { id: 1, name: 'Paket Nasi Kotak', price: 25000, image: '/images/ayam-bakar.jpg' },
+  { id: 2, name: 'Paket Ikan Bakar', price: 50000, image: '/images/ayam-bakar.jpg' },
+  { id: 3, name: 'Paket Snack Box', price: 15000, image: '/images/ayam-bakar.jpg' },
+  { id: 4, name: 'Paket Ayam Bakar', price: 100000, image: '/images/ayam-bakar.jpg' },
 ]
 
 export default function HomePage() {
@@ -47,41 +47,6 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-10 bg-white shadow">
-        <div className="container flex items-center justify-between px-4 py-4 mx-auto">
-          <h1 className="text-2xl font-bold">WaroengKuh</h1>
-          <nav className="hidden space-x-4 md:flex">
-            <button onClick={() => scrollToSection('beranda')} className="hover:text-primary">Beranda</button>
-            <button onClick={() => scrollToSection('menu')} className="hover:text-primary">Menu</button>
-            <button onClick={() => scrollToSection('tentang-kami')} className="hover:text-primary">Tentang Kami</button>
-            <button onClick={() => scrollToSection('kontak')} className="hover:text-primary">Kontak</button>
-          </nav>
-          <div className="flex items-center space-x-4">
-            <Button variant="outline" size="icon" onClick={() => toast({ title: "Keranjang Belanja", description: `Jumlah item: ${cart.length}` })}>
-              <ShoppingCart className="w-5 h-5" />
-              <span className="sr-only">Keranjang Belanja</span>
-              {cart.length > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">
-                  {cart.length}
-                </span>
-              )}
-            </Button>
-            <Button variant="outline" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              <span className="sr-only">Menu</span>
-            </Button>
-          </div>
-        </div>
-        {isMenuOpen && (
-          <nav className="flex flex-col px-4 py-2 space-y-2 bg-white md:hidden">
-            <button onClick={() => scrollToSection('beranda')} className="hover:text-primary">Beranda</button>
-            <button onClick={() => scrollToSection('menu')} className="hover:text-primary">Menu</button>
-            <button onClick={() => scrollToSection('tentang-kami')} className="hover:text-primary">Tentang Kami</button>
-            <button onClick={() => scrollToSection('kontak')} className="hover:text-primary">Kontak</button>
-          </nav>
-        )}
-      </header>
-
       <section id="beranda" className="py-16 bg-primary text-primary-foreground">
         <div className="container px-4 mx-auto">
           <div className="max-w-3xl mx-auto text-center">
@@ -128,8 +93,8 @@ export default function HomePage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
             <Card key={product.id}>
-              <CardHeader>
-                <Image src={product.image} alt={product.name} className="object-cover w-full h-48 rounded-t-lg" width={50} height={50}/>
+              <CardHeader className="relative h-48">
+                <Image src={product.image} alt={product.name} className="object-cover w-full h-full rounded-t-lg" width={1000} height={1000}/>
               </CardHeader>
               <CardContent>
                 <CardTitle>{product.name}</CardTitle>
