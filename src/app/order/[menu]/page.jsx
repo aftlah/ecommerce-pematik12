@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import { Calendar } from '@/components/ui/calendar'
+// import { Calendar } from '@/components/ui/calendar'
 import {
     Popover,
     PopoverContent,
@@ -119,12 +119,12 @@ export default function MenuItemDetail({ params }) {
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0">
-                                        <Calendar
+                                        {/* <Calendar
                                             mode="single"
                                             selected={deliveryDate}
                                             onSelect={setDeliveryDate}
                                             initialFocus
-                                        />
+                                        /> */}
                                     </PopoverContent>
                                 </Popover>
                             </div>
