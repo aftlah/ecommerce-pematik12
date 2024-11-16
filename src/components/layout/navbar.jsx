@@ -12,16 +12,16 @@ function Navbar() {
 
 
     return (
-        <header className="sticky top-0 z-10 bg-white shadow">
+        <header className="sticky top-0 z-10 bg-red-600 shadow xl:px-[50px] text-white">
             <div className="container flex items-center justify-between px-4 py-4 mx-auto">
                 <h1 onClick={() => router.push('/')} className="text-2xl font-bold cursor-pointer">WaroengKuh</h1>
                 <nav className="hidden space-x-4 md:flex">
-                    <button onClick={() => scrollToSection('beranda')} className="hover:text-primary">Beranda</button>
-                    <button onClick={() => scrollToSection('menu')} className="hover:text-primary">Menu</button>
-                    <button onClick={() => scrollToSection('tentang-kami')} className="hover:text-primary">Tentang Kami</button>
-                    <button onClick={() => scrollToSection('kontak')} className="hover:text-primary">Kontak</button>
+                    <button onClick={() => scrollToSection('beranda')} className="hover:opacity-80">Beranda</button>
+                    <button onClick={() => scrollToSection('menu')} className="hover:opacity-80">Menu</button>
+                    <button onClick={() => scrollToSection('tentang-kami')} className="hover:opacity-80">Tentang Kami</button>
+                    <button onClick={() => scrollToSection('kontak')} className="hover:opacity-80">Kontak</button>
                 </nav>
-                <div className="flex items-center p-1 space-x-4">
+                <div className="flex items-center p-1 space-x-4 text-primary">
                     {/* <Button variant="outline" size="icon" onClick={() => toast({ title: "Keranjang Belanja", description: `Jumlah item: ${cart.length}` })}> */}
                     <Button variant="outline" size="icon" className="relative " onClick={() => router.push('/order/list') }>
                         <ShoppingCart className="w-5 h-5" />

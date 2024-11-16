@@ -46,11 +46,11 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <section id="beranda" className="py-16 bg-primary text-primary-foreground">
+    <div className="flex flex-col min-h-screen ">
+      <section id="beranda" className="py-16 xl:px-[50px]">
         <div className="container px-4 mx-auto">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="mb-4 text-4xl font-bold">Katering Berkualitas untuk Setiap Acara Anda</h1>
+            <h1 className="mb-4 text-4xl font-bold uppercase">Katering Berkualitas untuk Setiap Acara Anda</h1>
             <p className="mb-8 text-xl">Nikmati hidangan lezat dan pelayanan prima untuk berbagai acara, dari pesta ulang tahun hingga pernikahan.</p>
             <Button size="lg" className="bg-white text-primary hover:bg-gray-100" onClick={() => scrollToSection('menu')}>
               Pesan Sekarang <ArrowRight className="w-5 h-5 ml-2" />
@@ -59,36 +59,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="tentang-kami" className="py-16 bg-gray-50">
+      <section id="tentang-kami" className="py-16 bg-gray-50 xl:px-[50px]">
         <div className="container px-4 mx-auto">
-          <h2 className="mb-12 text-3xl font-bold text-center">Mengapa Memilih Kami?</h2>
+          <h2 className="mb-12 text-3xl font-bold text-center uppercase">Mengapa Memilih Kami?</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="flex flex-col items-center text-center">
-              <div className="p-4 mb-4 rounded-full bg-primary text-primary-foreground">
+              <div className="p-4 mb-4 rounded-full bg-red-500 text-primary-foreground">
                 <Utensils className="w-8 h-8" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold">Menu Beragam</h3>
-              <p>Pilihan menu yang luas untuk memenuhi selera semua tamu Anda.</p>
+              <h3 className="mb-2 text-xl font-semibold uppercase">Menu Beragam</h3>
+              <p className='max-w-sm'>Pilihan menu yang luas untuk memenuhi selera semua tamu Anda.</p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <div className="p-4 mb-4 rounded-full bg-primary text-primary-foreground">
+              <div className="p-4 mb-4 rounded-full bg-red-500 text-primary-foreground">
                 <Clock className="w-8 h-8" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold">Tepat Waktu</h3>
-              <p>Kami menjamin ketepatan waktu pengiriman untuk kenyamanan acara Anda.</p>
+              <h3 className="mb-2 text-xl font-semibold uppercase">Tepat Waktu</h3>
+              <p className='max-w-sm'>Kami menjamin ketepatan waktu pengiriman untuk kenyamanan acara Anda.</p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <div className="p-4 mb-4 rounded-full bg-primary text-primary-foreground">
+              <div className="p-4 mb-4 rounded-full bg-red-500 text-primary-foreground">
                 <Users className="w-8 h-8" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold">Pelayanan Prima</h3>
-              <p>Tim kami siap memberikan pelayanan terbaik untuk kepuasan Anda.</p>
+              <h3 className="mb-2 text-xl font-semibold uppercase">Pelayanan Prima</h3>
+              <p className='max-w-sm'>Tim kami siap memberikan pelayanan terbaik untuk kepuasan Anda.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <main id="menu" className="container flex-grow px-4 py-8 mx-auto">
+      <main id="menu" className="container flex-grow px-4 py-8 mx-auto xl:px-[50px]">
         <h2 className="mb-6 text-3xl font-bold text-center">Menu Favorit Kami</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
@@ -113,7 +113,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      <footer id="kontak" className="mt-12 bg-gray-100">
+      <footer id="kontak" className="mt-12 bg-gray-100 xl:px-[50px]">
         <div className="container px-4 py-8 mx-auto">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div>
