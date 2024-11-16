@@ -10,11 +10,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 // import { Calendar } from '@/components/ui/calendar'
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover'
+// import {
+//     Popover,
+//     PopoverContent,
+//     PopoverTrigger,
+// } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 
@@ -105,7 +105,7 @@ export default function MenuItemDetail({ params }) {
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="deliveryDate">Delivery Date</Label>
-                                <Popover>
+                                {/* <Popover>
                                     <PopoverTrigger asChild>
                                         <Button
                                             variant={"outline"}
@@ -119,14 +119,14 @@ export default function MenuItemDetail({ params }) {
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0">
-                                        {/* <Calendar
+                                        <Calendar
                                             mode="single"
                                             selected={deliveryDate}
                                             onSelect={setDeliveryDate}
                                             initialFocus
-                                        /> */}
+                                        />
                                     </PopoverContent>
-                                </Popover>
+                                </Popover> */}
                             </div>
                             <Separator />
                             <div className="space-y-4">
