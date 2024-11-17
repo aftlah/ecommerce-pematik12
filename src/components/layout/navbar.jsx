@@ -52,7 +52,6 @@ function Navbar() {
                             <nav className="hidden md:flex">
                                 <button onClick={() => router.push('/')} className=" hover:underline">Home</button>
                             </nav>
-
                         ) : (
                             <nav className="hidden space-x-4 md:flex">
                                 <button onClick={() => scrollToSection('beranda')} className=" hover:underline">Beranda</button>
