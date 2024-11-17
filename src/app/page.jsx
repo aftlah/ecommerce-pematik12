@@ -1,12 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ShoppingCart, Menu, X, ArrowRight, Clock, Utensils, Users } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/hooks/use-toast"
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
 
 const products = [
   { id: 1, name: 'Paket Nasi Kotak', price: 25000, image: '/images/ayam-bakar.jpg' },
@@ -19,13 +23,33 @@ export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [cart, setCart] = useState([])
   const [email, setEmail] = useState('')
+  const [user, setUser] = useState(null)
+  const { toast } = useToast()
+  const router = useRouter()
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   const addToCart = (product) => {
-    setCart([...cart, product])
-    toast({
-      title: "Produk ditambahkan",
-      description: `${product.name} telah ditambahkan ke keranjang.`,
-    })
+    if (user) {
+      setCart([...cart, product])
+      toast({
+        title: "Produk ditambahkan",
+        description: `${product.name} telah ditambahkan ke keranjang.`,
+      })
+    } else {
+      toast({
+        title: "Login diperlukan",
+        description: "Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.",
+        variant: "destructive",
+      })
+      router.push('/auth/login')
+    }
   }
 
   const handleSubscribe = (e) => {
@@ -46,7 +70,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen ">
+    <div className="flex flex-col min-h-screen">
+      <Toaster />
       <section id="beranda" className="py-16 xl:px-[50px]">
         <div className="container px-4 mx-auto">
           <div className="max-w-3xl mx-auto text-center">
@@ -64,21 +89,21 @@ export default function HomePage() {
           <h2 className="mb-12 text-3xl font-bold text-center uppercase">Mengapa Memilih Kami?</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="flex flex-col items-center text-center">
-              <div className="p-4 mb-4 rounded-full bg-red-500 text-primary-foreground">
+              <div className="p-4 mb-4 bg-red-500 rounded-full text-primary-foreground">
                 <Utensils className="w-8 h-8" />
               </div>
               <h3 className="mb-2 text-xl font-semibold uppercase">Menu Beragam</h3>
               <p className='max-w-sm'>Pilihan menu yang luas untuk memenuhi selera semua tamu Anda.</p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <div className="p-4 mb-4 rounded-full bg-red-500 text-primary-foreground">
+              <div className="p-4 mb-4 bg-red-500 rounded-full text-primary-foreground">
                 <Clock className="w-8 h-8" />
               </div>
               <h3 className="mb-2 text-xl font-semibold uppercase">Tepat Waktu</h3>
               <p className='max-w-sm'>Kami menjamin ketepatan waktu pengiriman untuk kenyamanan acara Anda.</p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <div className="p-4 mb-4 rounded-full bg-red-500 text-primary-foreground">
+              <div className="p-4 mb-4 bg-red-500 rounded-full text-primary-foreground">
                 <Users className="w-8 h-8" />
               </div>
               <h3 className="mb-2 text-xl font-semibold uppercase">Pelayanan Prima</h3>
@@ -94,7 +119,7 @@ export default function HomePage() {
           {products.map((product) => (
             <Card key={product.id}>
               <CardHeader className="relative h-48">
-                <Image src={product.image} alt={product.name} className="object-cover w-full h-full rounded-t-lg" width={1000} height={1000}/>
+                <Image src={product.image} alt={product.name} className="object-cover w-full h-full rounded-t-lg" width={1000} height={1000} />
               </CardHeader>
               <CardContent>
                 <CardTitle>{product.name}</CardTitle>
@@ -129,10 +154,10 @@ export default function HomePage() {
               <h3 className="mb-4 text-lg font-semibold">Berlangganan</h3>
               <p className="mb-2">Dapatkan info terbaru dan penawaran spesial</p>
               <form className="flex" onSubmit={handleSubscribe}>
-                <Input 
-                  type="email" 
-                  placeholder="Alamat email Anda" 
-                  className="mr-2" 
+                <Input
+                  type="email"
+                  placeholder="Alamat email Anda"
+                  className="mr-2"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -142,7 +167,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-8 text-center">
-            <p>&copy; 2023 WaroengKuh. Hak Cipta Dilindungi.</p>
+            <p>&copy; 2024 WaroengKuh. Hak Cipta Dilindungi.</p>
           </div>
         </div>
       </footer>
