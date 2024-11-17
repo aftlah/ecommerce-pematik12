@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth } from "@/lib/firebase/init";
 
 export const useAuth = () => {
     const [user, setUser] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
     const [email, setEmail] = useState(null);
 
-    console.log("user", user);
+    // console.log("user", user);
 
 
     useEffect(() => {

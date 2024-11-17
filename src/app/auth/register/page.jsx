@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { auth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase/init'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react'

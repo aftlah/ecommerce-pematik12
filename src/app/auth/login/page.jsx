@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
-import { auth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase/init'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react'
@@ -12,7 +12,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import { authenticationUser } from '../../../hooks/useFirestore'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 
 export default function LoginPage() {

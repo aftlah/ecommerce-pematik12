@@ -11,27 +11,27 @@ const AuthForm = () => {
     const handleRegister = async () => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            console.log("User registered:", userCredential.user);
+            // console.log("User registered:", userCredential.user);
         } catch (error) {
-            console.error("Error registering user:", error);
+            // console.error("Error registering user:", error);
         }
     };
 
     const handleLogin = async () => {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            console.log("User logged in:", userCredential.user);
+            // console.log("User logged in:", userCredential.user);
         } catch (error) {
-            console.error("Error logging in:", error);
+            // console.error("Error logging in:", error);
         }
     };
 
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            console.log("User logged out");
+            // console.log("User logged out");
         } catch (error) {
-            console.error("Error logging out:", error);
+            // console.error("Error logging out:", error);
         }
     };
 

@@ -4,7 +4,7 @@ import { Button } from '../ui/button'
 import { Menu, ShoppingCart, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
-import { auth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase/init'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -26,7 +26,7 @@ function Navbar() {
 
 
 
-    console.log(username);
+    // console.log(username);
 
 
 
@@ -36,8 +36,6 @@ function Navbar() {
             section.scrollIntoView({ behavior: 'smooth' });
         }
     };
-
-
 
     const authPaths = ['/auth/login', '/auth/register']
 

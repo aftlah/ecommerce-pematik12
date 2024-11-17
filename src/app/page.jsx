@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase/init'
 import { useAuth } from '@/hooks/useAuth'
 
 const products = [
@@ -38,7 +38,7 @@ export default function HomePage() {
     return () => unsubscribe()
   }, [])
 
-  console.log(user);
+  // console.log(user);
 
 
   const addToCart = (product) => {
