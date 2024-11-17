@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
+import { useAuth } from '@/hooks/useAuth'
 
 const products = [
   { id: 1, name: 'Paket Nasi Kotak', price: 25000, image: '/images/ayam-bakar.jpg' },
@@ -26,6 +27,8 @@ export default function HomePage() {
   const [user, setUser] = useState(null)
   const { toast } = useToast()
   const router = useRouter()
+  // const { user, loading } = useAuth()
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -34,6 +37,9 @@ export default function HomePage() {
 
     return () => unsubscribe()
   }, [])
+
+  console.log(user);
+
 
   const addToCart = (product) => {
     if (user) {

@@ -1,38 +1,38 @@
 import { db } from "../lib/firebase";
 import {
     collection,
-    addDoc,
     getDocs,
-    updateDoc,
-    deleteDoc,
-    doc,
     query,
     where,
 } from "firebase/firestore";
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 
-
-export const useFirestore = () => {
-
-    const authenticationUser = async (auth, email, password) => {
+export const authenticationUser = async (auth, email, password) => {
+    const userQuery = query(collection(db, "users"), where("email", "==", email));
+    const querySnapshot = await getDocs(userQuery);
+    if (!querySnapshot.empty) {
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             console.log("User logged in:", userCredential.user);
         } catch (error) {
-            if (error.code === 'auth/user-not-found') {
-                try {
-                    const newUserCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    console.log("User registered:", newUserCredential.user);
-                } catch (registerError) {
-                    console.error("Error registering user:", registerError);
-                }
-            } else {
-                console.error("Error logging in:", error);
-            }
+            console.error("Error logging in:", error);
         }
-    };
+    } else {
+        try {
+            const newUserCredential = await createUserWithEmailAndPassword(auth, email, password);
+            console.log("User registered:", newUserCredential.user);
+        } catch (registerError) {
+            console.error("Error registering user:", registerError);
+        }
+    }
+};
 
-    return { authenticationUser };
-}
 
-export default useFirestore;
+// export const useFirestore = () => {
+
+
+
+//     return { authenticationUser };
+// }
+
+// export default useFirestore;
