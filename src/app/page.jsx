@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { ShoppingCart, Menu, X, ArrowRight, Clock, Utensils, Users } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/hooks/use-toast"
@@ -12,33 +12,51 @@ import { useRouter } from 'next/navigation'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase/init'
 import { useAuth } from '@/hooks/useAuth'
+import { getMenus } from '@/lib/firebase/service'
 
-const products = [
-  { id: 1, name: 'Paket Nasi Kotak', price: 25000, image: '/images/ayam-bakar.jpg' },
-  { id: 2, name: 'Paket Ikan Bakar', price: 50000, image: '/images/ayam-bakar.jpg' },
-  { id: 3, name: 'Paket Snack Box', price: 15000, image: '/images/ayam-bakar.jpg' },
-  { id: 4, name: 'Paket Ayam Bakar', price: 100000, image: '/images/ayam-bakar.jpg' },
-]
+// const products = [
+//   { id: 1, name: 'Paket Nasi Kotak', price: 25000, image: '/images/ayam-bakar.jpg' },
+//   { id: 2, name: 'Paket Ikan Bakar', price: 50000, image: '/images/ayam-bakar.jpg' },
+//   { id: 3, name: 'Paket Snack Box', price: 15000, image: '/images/ayam-bakar.jpg' },
+//   { id: 4, name: 'Paket Ayam Bakar', price: 100000, image: '/images/ayam-bakar.jpg' },
+// ]
+
+
+
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [cart, setCart] = useState([])
+  const [products, setProducts] = useState([])
   const [email, setEmail] = useState('')
   const [user, setUser] = useState(null)
   const { toast } = useToast()
   const router = useRouter()
-  // const { user, loading } = useAuth()
-
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser)
     })
 
-    return () => unsubscribe()
-  }, [])
+    const fetchProducts = async () => {
+      try {
+        const products = await getMenus()
+        setProducts(products)
+        console.log(products[0]);
+      } catch (error) {
+        console.error('Error fetching products: ', error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch products. Please check your Firestore rules.",
+          variant: "destructive",
+        });
+      }
+    };
 
-  // console.log(user);
+    fetchProducts();
+
+    return () => unsubscribe()
+  }, [toast])
 
 
   const addToCart = (product) => {
@@ -123,13 +141,19 @@ export default function HomePage() {
         <h2 className="mb-6 text-3xl font-bold text-center">Menu Favorit Kami</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
-            <Card key={product.id}>
+            <Card key={product.name}>
               <CardHeader className="relative h-48">
-                <Image src={product.image} alt={product.name} className="object-cover w-full h-full rounded-t-lg" width={1000} height={1000} />
+                <Image src={product.images} alt={product.name} className="object-cover w-full h-full rounded-t-lg" width={1000} height={1000} />
               </CardHeader>
               <CardContent>
-                <CardTitle>{product.name}</CardTitle>
-                <p className="mt-2 text-lg font-semibold">Rp {product.price.toLocaleString()}</p>
+                <CardTitle className="-mt-4 text-xl">{product.name}</CardTitle>
+                <CardDescription className="mt-2">
+                  {product.description.length > 100 ? `${product.description.substring(0, 100)}...` : product.description}
+                </CardDescription>
+                <p className="mt-2 text-lg font-semibold">
+                  {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(product.price)}
+                </p>
+
               </CardContent>
               <CardFooter>
                 <Button className="w-full" onClick={() => addToCart(product)}>Tambah ke Keranjang</Button>

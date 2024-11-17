@@ -30,12 +30,13 @@ export const authenticationUser = async (auth, email, password) => {
     }
 };
 
+export const getMenus = async () =>{
+    const menuQuery = query(collection(firestore, "menus"));
+    const querySnapshot = await getDocs(menuQuery);
+    const menus = [];
 
-// export const useFirestore = () => {
-
-
-
-//     return { authenticationUser };
-// }
-
-// export default useFirestore;
+    querySnapshot.docs.map((doc) => {
+        menus.push(doc.data());
+    });
+    return menus;
+}

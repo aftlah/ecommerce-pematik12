@@ -16,19 +16,6 @@ function Navbar() {
     const { user, username, loading } = useAuth()
 
 
-    // useEffect(() => {
-    //     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-    //         setUser(currentUser)
-    //     })
-
-    //     return () => unsubscribe()
-    // }, [])
-
-
-
-    // console.log(username);
-
-
 
     const scrollToSection = (sectionId) => {
         const section = document.getElementById(sectionId);
@@ -68,6 +55,7 @@ function Navbar() {
                         <div className="flex items-center p-1 space-x-4 text-primary ">
                             {user && (
                                 <>
+                                <p className='text-white  md:hidden'>{username}</p>
                                     <Button variant="outline" size="icon" className="relative " onClick={() => router.push('/order/list')}>
                                         <ShoppingCart className="w-5 h-5" />
                                         <span className="sr-only">Keranjang Belanja</span>
@@ -75,7 +63,7 @@ function Navbar() {
                                             5
                                         </span>
                                     </Button>
-                                    <p className='text-white'>{username}</p>
+                                    <p className='hidden text-white md:block'>{username}</p>
                                 </>
 
                             )}
