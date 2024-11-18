@@ -1,40 +1,49 @@
 import { create } from 'zustand';
 
-const useCartStore = create((set) => ({
-    cartItems: [],
+const useCartStore = create((set) => {
+    const savedCartItems = JSON.parse(sessionStorage.getItem('cartItems')) || [];
 
-    // Tambahkan produk ke keranjang
-    addToCart: (product) =>
-        set((state) => {
-            const existingItem = state.cartItems.find((item) => item.id === product.id);
-            if (existingItem) {
-                // Jika produk sudah ada, tambahkan jumlahnya
-                return {
-                    cartItems: state.cartItems.map((item) =>
+    const setCartItems = (cartItems) => {
+        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        set({ cartItems });
+    };
+
+    return {
+        cartItems: savedCartItems,
+
+        addToCart: (product) =>
+            set((state) => {
+                const existingItem = state.cartItems.find((item) => item.id === product.id);
+                let newCartItems;
+                if (existingItem) {
+                    newCartItems = state.cartItems.map((item) =>
                         item.id === product.id
                             ? { ...item, quantity: item.quantity + 1 }
                             : item
-                    ),
-                };
-            } else {
-                // Tambahkan produk baru
-                return { cartItems: [...state.cartItems, { ...product, quantity: 1 }] };
-            }
-        }),
+                    );
+                } else {
+                    newCartItems = [...state.cartItems, { ...product, quantity: 1 }];
+                }
+                setCartItems(newCartItems);
+                return { cartItems: newCartItems };
+            }),
 
-    // Ubah jumlah produk
-    updateQuantity: (id, quantity) =>
-        set((state) => ({
-            cartItems: state.cartItems.map((item) =>
-                item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
-            ),
-        })),
+        updateQuantity: (id, quantity) =>
+            set((state) => {
+                const newCartItems = state.cartItems.map((item) =>
+                    item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
+                );
+                setCartItems(newCartItems);
+                return { cartItems: newCartItems };
+            }),
 
-    // Hapus produk dari keranjang
-    removeFromCart: (id) =>
-        set((state) => ({
-            cartItems: state.cartItems.filter((item) => item.id !== id),
-        })),
-}));
+        removeFromCart: (id) =>
+            set((state) => {
+                const newCartItems = state.cartItems.filter((item) => item.id !== id);
+                setCartItems(newCartItems);
+                return { cartItems: newCartItems };
+            }),
+    };
+});
 
 export default useCartStore;

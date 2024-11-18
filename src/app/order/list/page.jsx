@@ -12,27 +12,26 @@ import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import useCartStore from '@/stores/useCartStore';
-import { useAuth } from '@/hooks/useAuth';
+import useUserStore from '@/stores/useUserStore';
 
 export default function OrderListPage() {
     const router = useRouter();
-    const { user, username, loading } = useAuth()
     const { cartItems, updateQuantity, removeFromCart } = useCartStore();
+    const { isLoggedIn } = useUserStore();
+
 
     const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    
 
     const handleCheckout = () => {
-        console.log('Melanjutkan ke checkout dengan item:', cartItems);
         router.push('/checkout');
     };
 
     useEffect(() => {
-        if (!loading && !user) {
+        if (!isLoggedIn) {
             router.push('/');
         }
-    }, [loading, user, router]);
-
+    }, [isLoggedIn, router]);
+    
     return (
         <div className="container px-4 py-8 mx-auto">
             <h1 className="mb-6 text-3xl font-bold">Keranjang Anda</h1>

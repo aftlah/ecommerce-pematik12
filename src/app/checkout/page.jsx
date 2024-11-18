@@ -12,6 +12,7 @@ import { CreditCard, Search, Truck } from 'lucide-react'
 import Image from 'next/image'
 import { cityDistances } from '@/lib/datas'
 import useCartStore  from '@/stores/useCartStore' 
+import useUserStore from '@/stores/useUserStore'
 
 export default function CheckoutPage() {
     const router = useRouter() 
@@ -24,17 +25,18 @@ export default function CheckoutPage() {
     const [citySearch, setCitySearch] = useState('')
     const [filteredCities, setFilteredCities] = useState(Object.keys(cityDistances))
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const { isLoggedIn } = useUserStore();
 
     useEffect(() => {
-        if (!cartItems || cartItems.length === 0) {
+        if (!cartItems || cartItems.length === 0 || !isLoggedIn) {
             router.push('/') 
         }
-    }, [cartItems, router])
+    }, [cartItems, router, isLoggedIn])
 
     const calculateShippingCost = (distance) => {
         const baseCost = 10000
-        const costPerKm = 500
-        return baseCost + (distance * costPerKm)
+        const costPerKm = 250
+        return baseCost + (distance + costPerKm)
     }
 
     useEffect(() => {
@@ -64,7 +66,6 @@ export default function CheckoutPage() {
             handleCitySelect(filteredCities[0])
         }
     }
-
 
     return (
         <div className="container p-4 mx-auto md:p-6 lg:p-8">
@@ -173,7 +174,7 @@ export default function CheckoutPage() {
                                             <div className="flex items-center">
                                                 <div className="relative w-[60px] h-[30px] mr-2">
                                                     <Image
-                                                        src="/images/logo-bca.jpg"
+                                                        src="/images/bca.svg"
                                                         alt="Logo BCA"
                                                         layout="fill"
                                                         objectFit="contain"
@@ -186,7 +187,7 @@ export default function CheckoutPage() {
                                             <div className="flex items-center">
                                                 <div className="relative w-[60px] h-[30px] mr-2">
                                                     <Image
-                                                        src="/images/logo-mandiri.jpg"
+                                                        src="/images/mandiri.svg"
                                                         alt="Logo Mandiri"
                                                         layout="fill"
                                                         objectFit="contain"
@@ -199,7 +200,7 @@ export default function CheckoutPage() {
                                             <div className="flex items-center">
                                                 <div className="relative w-[60px] h-[30px] mr-2">
                                                     <Image
-                                                        src="/images/logo-bri.jpg"
+                                                        src="/images/bri.svg"
                                                         alt="Logo BRI"
                                                         layout="fill"
                                                         objectFit="contain"
@@ -227,7 +228,7 @@ export default function CheckoutPage() {
                             <span>Rp 1.000.000</span>
                         </div>
                         <div className="flex justify-between">
-                            <span>Pengiriman ke {selectedCity} ({distance} km)</span>
+                            <span>Ongkir</span>
                             <span>Rp {shippingCost.toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between font-bold">

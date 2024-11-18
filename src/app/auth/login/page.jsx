@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import useUserStore from '@/stores/useUserStore'
 
 export default function LoginPage() {
 	const [email, setEmail] = useState('')
@@ -22,32 +23,47 @@ export default function LoginPage() {
 	const router = useRouter()
 	const { toast } = useToast()
 	const { user, loading } = useAuth()
+	const { login } = useUserStore()
+
 
 	const handleLogin = async (e) => {
-		e.preventDefault()
+		e.preventDefault();
 		try {
+			const userCredential = await signInWithEmailAndPassword(auth, email, password);
+			const user = userCredential.user;
 
-			await signInWithEmailAndPassword(auth, email, password)
+			login({
+				email: user.email,
+				uid: user.uid,
+				displayName: user.displayName || "Guest"
+			});
+
 			toast({
 				title: "Login berhasil",
 				description: "Anda telah berhasil masuk ke akun Anda.",
-			})
-			router.push('/')
+			});
+			router.push('/');
 		} catch (error) {
 			toast({
 				title: "Login gagal",
 				description: "Gagal masuk. Periksa kembali email dan password Anda.",
 				variant: "destructive",
-			})
+			});
 		}
-	}
+	};
+
 
 	useEffect(() => {
 		if (loading) return
 		if (user) {
+			login({
+				email: user.email,
+				uid: user.uid,
+				displayName: user.displayName || "Guest"
+			});
 			router.push('/')
 		}
-	}, [user, loading, router])
+	}, [user, loading, router, login])
 
 	if (loading) {
 		return <div>Loading...</div>

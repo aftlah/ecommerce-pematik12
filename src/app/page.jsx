@@ -16,16 +16,6 @@ import { getMenus } from '@/lib/firebase/service'
 import useCartStore from '@/stores/useCartStore'
 
 
-// const products = [
-//   { id: 1, name: 'Paket Nasi Kotak', price: 25000, image: '/images/ayam-bakar.jpg' },
-//   { id: 2, name: 'Paket Ikan Bakar', price: 50000, image: '/images/ayam-bakar.jpg' },
-//   { id: 3, name: 'Paket Snack Box', price: 15000, image: '/images/ayam-bakar.jpg' },
-//   { id: 4, name: 'Paket Ayam Bakar', price: 100000, image: '/images/ayam-bakar.jpg' },
-// ]
-
-
-
-
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [cart, setCart] = useState([])
@@ -46,7 +36,7 @@ export default function HomePage() {
       try {
         const products = await getMenus()
         setProducts(products)
-        // console.log(products[0]);
+
       } catch (error) {
         console.error('Error fetching products: ', error);
         toast({
@@ -63,26 +53,9 @@ export default function HomePage() {
   }, [toast])
 
 
-  // const addToCart = (product) => {
-  //   if (user) {
-  //     setCart([...cart, product])
-  //     toast({
-  //       title: "Produk ditambahkan",
-  //       description: `${product.name} telah ditambahkan ke keranjang.`,
-  //     })
-  //   } else {
-  //     toast({
-  //       title: "Login diperlukan",
-  //       description: "Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.",
-  //       variant: "destructive",
-  //     })
-  //     router.push('/auth/login')
-  //   }
-  // }
-
   const addToCart = (product) => {
     if (user) {
-      addToCartStore(product); // Tambahkan produk ke Zustand store
+      addToCartStore(product);
       toast({
         title: "Produk ditambahkan",
         description: `${product.name} telah ditambahkan ke keranjang.`,
@@ -161,29 +134,38 @@ export default function HomePage() {
       <main id="menu" className="container flex-grow px-4 py-8 mx-auto xl:px-[50px]">
         <h2 className="mb-6 text-3xl font-bold text-center">Menu Favorit Kami</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
-            <Card key={product.name}>
+          {products.slice(0, 4).map((product) => (
+            <Card key={product.name} className="flex flex-col h-full">
               <CardHeader className="relative h-48">
-                <Image src={product.images} alt={product.name} className="object-cover w-full h-full rounded-t-lg" width={1000} height={1000} />
+                <Image
+                  src={product.images}
+                  alt={product.name}
+                  className="object-cover w-full h-full rounded-t-lg"
+                  width={1000}
+                  height={1000}
+                />
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex-grow">
                 <CardTitle className="-mt-4 text-xl">{product.name}</CardTitle>
                 <CardDescription className="mt-2">
-                  {product.description.length > 100 ? `${product.description.substring(0, 100)}...` : product.description}
+                  {product.description?.length > 100 ? `${product.description.substring(0, 100)}...` : product.description}
                 </CardDescription>
                 <p className="mt-2 text-lg font-semibold">
                   {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(product.price)}
                 </p>
-
               </CardContent>
-              <CardFooter>
-                <Button className="w-full" onClick={() => addToCart(product)}>Tambah ke Keranjang</Button>
+              <CardFooter className="mt-auto">
+                <Button className="w-full" onClick={() => addToCart(product)}>
+                  Tambah ke Keranjang
+                </Button>
               </CardFooter>
             </Card>
           ))}
+
         </div>
         <div className="mt-12 text-center">
-          <Button size="lg" variant="outline" onClick={() => toast({ title: "Lihat Semua Menu", description: "Fitur ini akan segera hadir!" })}>
+          {/* <Button size="lg" variant="outline" onClick={() => toast({ title: "Lihat Semua Menu", description: "Fitur ini akan segera hadir!" })}> */}
+          <Button size="lg" variant="outline" onClick={() => router.push('/menu/list')}>
             Lihat Semua Menu <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>
