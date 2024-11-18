@@ -13,6 +13,8 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase/init'
 import { useAuth } from '@/hooks/useAuth'
 import { getMenus } from '@/lib/firebase/service'
+import useCartStore from '@/stores/useCartStore'
+
 
 // const products = [
 //   { id: 1, name: 'Paket Nasi Kotak', price: 25000, image: '/images/ayam-bakar.jpg' },
@@ -33,6 +35,8 @@ export default function HomePage() {
   const { toast } = useToast()
   const router = useRouter()
 
+  const addToCartStore = useCartStore((state) => state.addToCart);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser)
@@ -42,7 +46,7 @@ export default function HomePage() {
       try {
         const products = await getMenus()
         setProducts(products)
-        console.log(products[0]);
+        // console.log(products[0]);
       } catch (error) {
         console.error('Error fetching products: ', error);
         toast({
@@ -59,22 +63,39 @@ export default function HomePage() {
   }, [toast])
 
 
+  // const addToCart = (product) => {
+  //   if (user) {
+  //     setCart([...cart, product])
+  //     toast({
+  //       title: "Produk ditambahkan",
+  //       description: `${product.name} telah ditambahkan ke keranjang.`,
+  //     })
+  //   } else {
+  //     toast({
+  //       title: "Login diperlukan",
+  //       description: "Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.",
+  //       variant: "destructive",
+  //     })
+  //     router.push('/auth/login')
+  //   }
+  // }
+
   const addToCart = (product) => {
     if (user) {
-      setCart([...cart, product])
+      addToCartStore(product); // Tambahkan produk ke Zustand store
       toast({
         title: "Produk ditambahkan",
         description: `${product.name} telah ditambahkan ke keranjang.`,
-      })
+      });
     } else {
       toast({
         title: "Login diperlukan",
         description: "Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.",
         variant: "destructive",
-      })
-      router.push('/auth/login')
+      });
+      router.push('/auth/login'); // Redirect ke halaman login
     }
-  }
+  };
 
   const handleSubscribe = (e) => {
     e.preventDefault()

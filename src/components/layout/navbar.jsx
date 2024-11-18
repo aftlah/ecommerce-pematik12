@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { auth } from '@/lib/firebase/init'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useAuth } from '@/hooks/useAuth'
+import useCartStore from '@/stores/useCartStore'
 
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -14,6 +15,8 @@ function Navbar() {
     const router = useRouter()
     const pathname = usePathname()
     const { user, username, loading } = useAuth()
+    const { cartItems } = useCartStore()
+
 
 
 
@@ -55,13 +58,15 @@ function Navbar() {
                         <div className="flex items-center p-1 space-x-4 text-primary ">
                             {user && (
                                 <>
-                                <p className='text-white  md:hidden'>{username}</p>
+                                    <p className='text-white md:hidden'>{username}</p>
                                     <Button variant="outline" size="icon" className="relative " onClick={() => router.push('/order/list')}>
                                         <ShoppingCart className="w-5 h-5" />
                                         <span className="sr-only">Keranjang Belanja</span>
-                                        <span className="absolute items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full -right-1 -top-1 inlie-flex">
-                                            5
-                                        </span>
+                                        {cartItems.length > 0 && (
+                                            <span className="absolute items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full -right-1 -top-1 inlie-flex">
+                                                {cartItems.length}
+                                            </span>
+                                        )}
                                     </Button>
                                     <p className='hidden text-white md:block'>{username}</p>
                                 </>

@@ -30,7 +30,7 @@ export const authenticationUser = async (auth, email, password) => {
     }
 };
 
-export const getMenus = async () =>{
+export const getMenus = async () => {
     const menuQuery = query(collection(firestore, "menus"));
     const querySnapshot = await getDocs(menuQuery);
     const menus = [];
@@ -39,4 +39,11 @@ export const getMenus = async () =>{
         menus.push(doc.data());
     });
     return menus;
+}
+
+export const getOrders = async (userId) => {
+    const querySnapshot = await getDocs(collection(firestore, 'cartItems'));
+    const items = querySnapshot.docs.map(doc => doc.data());
+    return items
+
 }
