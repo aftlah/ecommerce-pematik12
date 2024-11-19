@@ -63,7 +63,7 @@ function Navbar() {
         { name: 'Kontak', id: 'kontak' },
     ];
 
-    const pathOtherThanHome = ['/menu/list', '/order/list']
+    const pathOtherThanHome = ['/menu/list', '/order/list','/checkout']
 
     return (
         <>
@@ -141,7 +141,7 @@ function Navbar() {
                                 </>
                             )}
                             {!user && (
-                                <Button variant="ghost" onClick={() => router.push('/auth/login')} className="text-gray-900 bg-white transition-colors duration-200 hover:opacity-95 font-bold">
+                                <Button variant="ghost" onClick={() => router.push('/auth/login')} className="font-bold text-gray-900 transition-colors duration-200 bg-white hover:opacity-95">
                                     Login
                                 </Button>
                             )}

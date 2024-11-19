@@ -116,7 +116,7 @@ export default function HomePage() {
       <motion.section id="beranda" className="py-16 xl:px-[50px] bg-gradient-to-r from-gray-800 to-gray-900 text-white" variants={itemVariants}>
         <div className="container px-4 mx-auto">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="mb-4 text-4xl font-bold uppercase">Katering Berkualitas untuk Setiap Acara Anda</h1>
+            <h1 className="mb-4 text-4xl font-bold uppercase">Makanan Berkualitas untuk Setiap Acara Anda</h1>
             <p className="mb-8 text-xl">Nikmati hidangan lezat dan pelayanan prima untuk berbagai acara, dari pesta ulang tahun hingga pernikahan.</p>
             <Button size="lg" className="text-gray-900 bg-gray-100 hover:bg-gray-200" onClick={() => scrollToSection('menu')}>
               Pesan Sekarang <ArrowRight className="w-5 h-5 ml-2" />
@@ -213,7 +213,7 @@ export default function HomePage() {
                 <Input
                   type="email"
                   placeholder="Alamat email Anda"
-                  className="mr-2"
+                  className="mr-2 "
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required

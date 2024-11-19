@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/firebase/init'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
-import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react'
+import { Eye, EyeOff, Lock, Mail, User, Loader2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -19,6 +19,7 @@ export default function RegisterPage() {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [isRegistering, setIsRegistering] = useState(false)
     const router = useRouter()
     const { toast } = useToast()
     const { user, loading } = useAuth()
@@ -33,6 +34,7 @@ export default function RegisterPage() {
             })
             return
         }
+        setIsRegistering(true)
         try {
             await createUserWithEmailAndPassword(auth, email, password)
             toast({
@@ -43,12 +45,13 @@ export default function RegisterPage() {
         } catch (error) {
             toast({
                 title: "Pendaftaran gagal",
-                description: "Gagal membuat akun. Silakan coba lagi.",
+                description: "Gagal membuat akun. Silakan coba lagi. Pastikan email Anda belum terdaftar.",
                 variant: "destructive",
             })
+        } finally {
+            setIsRegistering(false)
         }
     }
-
 
     useEffect(() => {
         if (loading) return
@@ -61,7 +64,7 @@ export default function RegisterPage() {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <Card className="w-full max-w-md shadow-lg">
                 <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold text-center">Buat Akun Baru</CardTitle>
+                <CardTitle className="text-2xl font-bold text-center">Selamat Datang di <br /> Waroengkuh</CardTitle>
                     <CardDescription className="text-center">
                         Masukkan detail Anda untuk membuat akun baru
                     </CardDescription>
@@ -150,8 +153,15 @@ export default function RegisterPage() {
                                 </Button>
                             </div>
                         </div>
-                        <Button className="w-full" type="submit">
-                            Daftar
+                        <Button className="w-full" type="submit" disabled={isRegistering}>
+                            {isRegistering ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    Mendaftar...
+                                </>
+                            ) : (
+                                'Daftar'
+                            )}
                         </Button>
                     </form>
                 </CardContent>

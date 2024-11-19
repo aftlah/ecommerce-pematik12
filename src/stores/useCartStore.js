@@ -43,6 +43,13 @@ const useCartStore = create((set) => {
                 setCartItems(newCartItems);
                 return { cartItems: newCartItems };
             }),
+
+        clearCart: () =>
+            set(() => {
+                sessionStorage.removeItem('cartItems');
+                return { cartItems: [] };
+            }),
+
     };
 });
 

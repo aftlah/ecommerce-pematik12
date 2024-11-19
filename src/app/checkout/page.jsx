@@ -11,12 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CreditCard, Search, Truck } from 'lucide-react'
 import Image from 'next/image'
 import { cityDistances } from '@/lib/datas'
-import useCartStore  from '@/stores/useCartStore' 
+import useCartStore from '@/stores/useCartStore'
 import useUserStore from '@/stores/useUserStore'
+import { toast } from "@/hooks/use-toast"
 
 export default function CheckoutPage() {
-    const router = useRouter() 
-    const { cartItems } = useCartStore() 
+    const router = useRouter()
+    const { cartItems, clearCart } = useCartStore()
     const [paymentMethod, setPaymentMethod] = useState('credit-card')
     const [selectedCity, setSelectedCity] = useState('')
     const [distance, setDistance] = useState(0)
@@ -26,17 +27,29 @@ export default function CheckoutPage() {
     const [filteredCities, setFilteredCities] = useState(Object.keys(cityDistances))
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
     const { isLoggedIn } = useUserStore();
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        address: '',
+        city: '',
+        postalCode: '',
+        cardNumber: '',
+        expiryDate: '',
+        cvv: '',
+        bank: ''
+    })
+    const [errors, setErrors] = useState({})
 
     useEffect(() => {
-        if (!cartItems || cartItems.length === 0 || isLoggedIn) {
-            router.push('/') 
+        if (!cartItems || cartItems.length === 0) {
+            router.push('/')
         }
     }, [cartItems, router, isLoggedIn])
 
     const calculateShippingCost = (distance) => {
         const baseCost = 10000
         const costPerKm = 250
-        return baseCost + (distance + costPerKm)
+        return baseCost + (distance * costPerKm)
     }
 
     useEffect(() => {
@@ -59,11 +72,55 @@ export default function CheckoutPage() {
         setSelectedCity(city)
         setCitySearch(city)
         setIsDropdownOpen(false)
+        setFormData(prev => ({ ...prev, city }))
     }
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && filteredCities.length > 0) {
             handleCitySelect(filteredCities[0])
+        }
+    }
+
+    const handleInputChange = (e) => {
+        const { id, value } = e.target
+        setFormData(prev => ({ ...prev, [id]: value }))
+        setErrors(prev => ({ ...prev, [id]: '' }))
+    }
+
+    const validateForm = () => {
+        const newErrors = {}
+        const requiredFields = ['firstName', 'lastName', 'address', 'city', 'postalCode']
+
+        if (paymentMethod === 'credit-card') {
+            requiredFields.push('cardNumber', 'expiryDate', 'cvv')
+        } else {
+            requiredFields.push('bank')
+        }
+
+        requiredFields.forEach(field => {
+            if (!formData[field]) {
+                newErrors[field] = 'This field is required'
+            }
+        })
+
+        setErrors(newErrors)
+        return Object.keys(newErrors).length === 0
+    }
+
+    const handleCreateOrder = () => {
+        if (validateForm()) {
+            toast({
+                title: "Pesanan berhasil dibuat",
+                description: "Terima kasih atas pembelian Anda!",
+            })
+            clearCart()
+            router.push('/')
+        } else {
+            toast({
+                title: "Error",
+                description: "Harap isi semua field yang diperlukan",
+                variant: "destructive"
+            })
         }
     }
 
@@ -80,16 +137,34 @@ export default function CheckoutPage() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="firstName">Nama Depan</Label>
-                                <Input id="firstName" placeholder="Altaf" />
+                                <Input
+                                    id="firstName"
+                                    placeholder="Altaf"
+                                    value={formData.firstName}
+                                    onChange={handleInputChange}
+                                />
+                                {errors.firstName && <p className="text-sm text-red-500">{errors.firstName}</p>}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="lastName">Nama Belakang</Label>
-                                <Input id="lastName" placeholder="Fattah" />
+                                <Input
+                                    id="lastName"
+                                    placeholder="Fattah"
+                                    value={formData.lastName}
+                                    onChange={handleInputChange}
+                                />
+                                {errors.lastName && <p className="text-sm text-red-500">{errors.lastName}</p>}
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="address">Alamat</Label>
-                            <Input id="address" placeholder="Jl. Contoh No. 123" />
+                            <Input
+                                id="address"
+                                placeholder="Jl. Contoh No. 123"
+                                value={formData.address}
+                                onChange={handleInputChange}
+                            />
+                            {errors.address && <p className="text-sm text-red-500">{errors.address}</p>}
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
@@ -99,7 +174,10 @@ export default function CheckoutPage() {
                                         id="citySearch"
                                         placeholder="Cari kota..."
                                         value={citySearch}
-                                        onChange={(e) => setCitySearch(e.target.value)}
+                                        onChange={(e) => {
+                                            setCitySearch(e.target.value)
+                                            handleInputChange(e)
+                                        }}
                                         onKeyDown={handleKeyDown}
                                     />
                                     <Search className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2" />
@@ -117,10 +195,17 @@ export default function CheckoutPage() {
                                         </ul>
                                     )}
                                 </div>
+                                {errors.city && <p className="text-sm text-red-500">{errors.city}</p>}
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="postalCode">Kode Pos</Label>
-                                <Input id="postalCode" placeholder="12345" />
+                                <Input
+                                    id="postalCode"
+                                    placeholder="12345"
+                                    value={formData.postalCode}
+                                    onChange={handleInputChange}
+                                />
+                                {errors.postalCode && <p className="text-sm text-red-500">{errors.postalCode}</p>}
                             </div>
                         </div>
                     </CardContent>
@@ -147,16 +232,34 @@ export default function CheckoutPage() {
                             <div className="mt-4 space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="cardNumber">Nomor Kartu</Label>
-                                    <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
+                                    <Input
+                                        id="cardNumber"
+                                        placeholder="1234 5678 9012 3456"
+                                        value={formData.cardNumber}
+                                        onChange={handleInputChange}
+                                    />
+                                    {errors.cardNumber && <p className="text-sm text-red-500">{errors.cardNumber}</p>}
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <Label htmlFor="expiryDate">Tanggal Kadaluarsa</Label>
-                                        <Input id="expiryDate" placeholder="MM/YY" />
+                                        <Input
+                                            id="expiryDate"
+                                            placeholder="MM/YY"
+                                            value={formData.expiryDate}
+                                            onChange={handleInputChange}
+                                        />
+                                        {errors.expiryDate && <p className="text-sm text-red-500">{errors.expiryDate}</p>}
                                     </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="cvv">CVV</Label>
-                                        <Input id="cvv" placeholder="123" />
+                                        <Input
+                                            id="cvv"
+                                            placeholder="123"
+                                            value={formData.cvv}
+                                            onChange={handleInputChange}
+                                        />
+                                        {errors.cvv && <p className="text-sm text-red-500">{errors.cvv}</p>}
                                     </div>
                                 </div>
                             </div>
@@ -165,7 +268,7 @@ export default function CheckoutPage() {
                         {paymentMethod === 'bank-transfer' && (
                             <div className="mt-4 space-y-2">
                                 <Label htmlFor="bank">Pilih Bank</Label>
-                                <Select>
+                                <Select onValueChange={(value) => setFormData(prev => ({ ...prev, bank: value }))}>
                                     <SelectTrigger id="bank">
                                         <SelectValue placeholder="Pilih bank" />
                                     </SelectTrigger>
@@ -211,6 +314,7 @@ export default function CheckoutPage() {
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
+                                {errors.bank && <p className="text-sm text-red-500">{errors.bank}</p>}
                             </div>
                         )}
                     </CardContent>
@@ -238,7 +342,7 @@ export default function CheckoutPage() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button className="w-full">
+                    <Button className="w-full" onClick={handleCreateOrder}>
                         <Truck className="w-4 h-4 mr-2" /> Buat Pesanan
                     </Button>
                 </CardFooter>

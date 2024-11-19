@@ -26,11 +26,11 @@ export default function OrderListPage() {
         router.push('/checkout');
     };
 
-    useEffect(() => {
-        if (isLoggedIn) {
-            router.push('/');
-        }
-    }, [isLoggedIn, router]);
+    // useEffect(() => {
+    //     if (isLoggedIn) {
+    //         router.push('/');
+    //     }
+    // }, [isLoggedIn, router]);
     
     return (
         <div className="container px-4 py-8 mx-auto">

@@ -1,11 +1,11 @@
 'use client'
-import { useState, useEffect } from 'react'
 
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/firebase/init'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -20,14 +20,15 @@ export default function LoginPage() {
 	const [password, setPassword] = useState('')
 	const [showPassword, setShowPassword] = useState(false)
 	const [rememberMe, setRememberMe] = useState(false)
+	const [isLoggingIn, setIsLoggingIn] = useState(false)
 	const router = useRouter()
 	const { toast } = useToast()
 	const { user, loading } = useAuth()
 	const { login } = useUserStore()
 
-
 	const handleLogin = async (e) => {
 		e.preventDefault();
+		setIsLoggingIn(true);
 		try {
 			const userCredential = await signInWithEmailAndPassword(auth, email, password);
 			const user = userCredential.user;
@@ -49,9 +50,10 @@ export default function LoginPage() {
 				description: "Gagal masuk. Periksa kembali email dan password Anda.",
 				variant: "destructive",
 			});
+		} finally {
+			setIsLoggingIn(false);
 		}
 	};
-
 
 	useEffect(() => {
 		if (loading) return
@@ -73,7 +75,7 @@ export default function LoginPage() {
 		<div className="flex items-center justify-center min-h-screen bg-gray-100">
 			<Card className="w-full max-w-md shadow-lg">
 				<CardHeader className="space-y-1">
-					<CardTitle className="text-2xl font-bold text-center">Masuk ke Akun Anda</CardTitle>
+					<CardTitle className="text-2xl font-bold text-center">Selamat Datang di <br /> Waroengkuh</CardTitle>
 					<CardDescription className="text-center">
 						Silakan masuk dengan email dan password Anda.
 					</CardDescription>
@@ -106,7 +108,7 @@ export default function LoginPage() {
 										className="absolute inset-y-0 right-0 flex items-center px-2"
 										onClick={() => setShowPassword(!showPassword)}
 									>
-										{showPassword ? <EyeOff /> : <Eye />}
+										{showPassword ? <EyeOff className="w-4 h-4 text-gray-500" /> : <Eye className="w-4 h-4 text-gray-500" />}
 									</button>
 								</div>
 							</div>
@@ -114,14 +116,21 @@ export default function LoginPage() {
 								<Checkbox
 									id="rememberMe"
 									checked={rememberMe}
-									onChange={(e) => setRememberMe(e.target.checked)}
+									onCheckedChange={(checked) => setRememberMe(checked)}
 								/>
 								<Label htmlFor="rememberMe" className="ml-2">
 									Ingat saya
 								</Label>
 							</div>
-							<Button type="submit" className="w-full">
-								Masuk
+							<Button type="submit" className="w-full" disabled={isLoggingIn}>
+								{isLoggingIn ? (
+									<>
+										<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+										Sedang Masuk...
+									</>
+								) : (
+									'Masuk'
+								)}
 							</Button>
 						</div>
 					</form>
