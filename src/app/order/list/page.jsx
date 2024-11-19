@@ -27,7 +27,7 @@ export default function OrderListPage() {
     };
 
     useEffect(() => {
-        if (!isLoggedIn) {
+        if (isLoggedIn) {
             router.push('/');
         }
     }, [isLoggedIn, router]);

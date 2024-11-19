@@ -9,12 +9,12 @@ import { auth } from '@/lib/firebase/init'
 import { useAuth } from '@/hooks/useAuth'
 import useCartStore from '@/stores/useCartStore'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -35,7 +35,7 @@ function Navbar() {
         setIsMenuOpen(false);
     };
 
-    const authPaths = ['/auth/login', '/auth/register','/dashboard']
+    const authPaths = ['/auth/login', '/auth/register', '/dashboard']
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -70,15 +70,15 @@ function Navbar() {
             {!authPaths.includes(pathname) && (
                 <header className="sticky top-0 z-10 shadow-lg bg-gradient-to-r from-gray-800 to-gray-900">
                     <div className="container flex items-center justify-between py-4 mx-auto">
-                        <motion.h1 
-                            onClick={() => router.push('/')} 
+                        <motion.h1
+                            onClick={() => router.push('/')}
                             className="text-2xl font-bold text-gray-100 cursor-pointer"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
                             WaroengKuh
                         </motion.h1>
-                        
+
                         {pathOtherThanHome.includes(pathname) ? (
                             <nav className="hidden md:flex">
                                 <Button variant="ghost" onClick={() => router.push('/')} className="text-gray-300 hover:text-white hover:bg-gray-700">
@@ -99,7 +99,7 @@ function Navbar() {
                                 ))}
                             </nav>
                         )}
-                        
+
                         <div className="flex items-center space-x-4">
                             {user && (
                                 <>
@@ -128,6 +128,10 @@ function Navbar() {
                                                 </div>
                                             </DropdownMenuLabel>
                                             <DropdownMenuSeparator />
+                                            <DropdownMenuItem onClick={() => router.push('/dashboard')}>
+                                                <User className="w-4 h-4 mr-2" />
+                                                <span>Dashboard</span>
+                                            </DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => auth.signOut()}>
                                                 <LogOut className="w-4 h-4 mr-2" />
                                                 <span>Log out</span>
@@ -141,11 +145,11 @@ function Navbar() {
                                     Login
                                 </Button>
                             )}
-                            <Button 
+                            <Button
                                 ref={buttonRef}
-                                variant="ghost" 
-                                size="icon" 
-                                className="text-gray-300 md:hidden " 
+                                variant="ghost"
+                                size="icon"
+                                className="text-gray-300 md:hidden "
                                 onClick={toggleMenu}
                                 aria-expanded={isMenuOpen}
                                 aria-controls="mobile-menu"

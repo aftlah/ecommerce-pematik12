@@ -28,7 +28,7 @@ export default function CheckoutPage() {
     const { isLoggedIn } = useUserStore();
 
     useEffect(() => {
-        if (!cartItems || cartItems.length === 0 || !isLoggedIn) {
+        if (!cartItems || cartItems.length === 0 || isLoggedIn) {
             router.push('/') 
         }
     }, [cartItems, router, isLoggedIn])

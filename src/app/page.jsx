@@ -11,10 +11,9 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase/init'
-import { useAuth } from '@/hooks/useAuth'
 import { getMenus } from '@/lib/firebase/service'
 import useCartStore from '@/stores/useCartStore'
-
+import { motion } from 'framer-motion'
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -25,7 +24,7 @@ export default function HomePage() {
   const { toast } = useToast()
   const router = useRouter()
 
-  const addToCartStore = useCartStore((state) => state.addToCart);
+  const addToCartStore = useCartStore((state) => state.addToCart)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -36,39 +35,37 @@ export default function HomePage() {
       try {
         const products = await getMenus()
         setProducts(products)
-
       } catch (error) {
-        console.error('Error fetching products: ', error);
+        console.error('Error fetching products: ', error)
         toast({
           title: "Error",
           description: "Failed to fetch products. Please check your Firestore rules.",
           variant: "destructive",
-        });
+        })
       }
-    };
+    }
 
-    fetchProducts();
+    fetchProducts()
 
     return () => unsubscribe()
   }, [toast])
 
-
   const addToCart = (product) => {
     if (user) {
-      addToCartStore(product);
+      addToCartStore(product)
       toast({
         title: "Produk ditambahkan",
         description: `${product.name} telah ditambahkan ke keranjang.`,
-      });
+      })
     } else {
       toast({
         title: "Login diperlukan",
         description: "Silakan login terlebih dahulu untuk menambahkan produk ke keranjang.",
         variant: "destructive",
-      });
-      router.push('/auth/login'); // Redirect ke halaman login
+      })
+      router.push('/auth/login')
     }
-  };
+  }
 
   const handleSubscribe = (e) => {
     e.preventDefault()
@@ -87,91 +84,117 @@ export default function HomePage() {
     setIsMenuOpen(false)
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        duration: 0.5,
+        when: "beforeChildren",
+        staggerChildren: 0.2
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { duration: 0.5 }
+    }
+  }
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <motion.div 
+      className="flex flex-col min-h-screen"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       <Toaster />
-      <section id="beranda" className="py-16 xl:px-[50px]">
+      <motion.section id="beranda" className="py-16 xl:px-[50px] bg-gradient-to-r from-gray-800 to-gray-900 text-white" variants={itemVariants}>
         <div className="container px-4 mx-auto">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="mb-4 text-4xl font-bold uppercase">Katering Berkualitas untuk Setiap Acara Anda</h1>
             <p className="mb-8 text-xl">Nikmati hidangan lezat dan pelayanan prima untuk berbagai acara, dari pesta ulang tahun hingga pernikahan.</p>
-            <Button size="lg" className="bg-white text-primary hover:bg-gray-100" onClick={() => scrollToSection('menu')}>
+            <Button size="lg" className="text-gray-900 bg-gray-100 hover:bg-gray-200" onClick={() => scrollToSection('menu')}>
               Pesan Sekarang <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section id="tentang-kami" className="py-16 bg-gray-50 xl:px-[50px]">
+      <motion.section id="tentang-kami" className="py-16 bg-gray-50 xl:px-[50px]" variants={itemVariants}>
         <div className="container px-4 mx-auto">
           <h2 className="mb-12 text-3xl font-bold text-center uppercase">Mengapa Memilih Kami?</h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="flex flex-col items-center text-center">
-              <div className="p-4 mb-4 bg-red-500 rounded-full text-primary-foreground">
+            <motion.div className="flex flex-col items-center text-center" whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
+              <div className="p-4 mb-4 text-gray-100 bg-gray-700 rounded-full">
                 <Utensils className="w-8 h-8" />
               </div>
               <h3 className="mb-2 text-xl font-semibold uppercase">Menu Beragam</h3>
               <p className='max-w-sm'>Pilihan menu yang luas untuk memenuhi selera semua tamu Anda.</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="p-4 mb-4 bg-red-500 rounded-full text-primary-foreground">
+            </motion.div>
+            <motion.div className="flex flex-col items-center text-center" whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
+              <div className="p-4 mb-4 text-gray-100 bg-gray-700 rounded-full">
                 <Clock className="w-8 h-8" />
               </div>
               <h3 className="mb-2 text-xl font-semibold uppercase">Tepat Waktu</h3>
               <p className='max-w-sm'>Kami menjamin ketepatan waktu pengiriman untuk kenyamanan acara Anda.</p>
-            </div>
-            <div className="flex flex-col items-center text-center">
-              <div className="p-4 mb-4 bg-red-500 rounded-full text-primary-foreground">
+            </motion.div>
+            <motion.div className="flex flex-col items-center text-center" whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
+              <div className="p-4 mb-4 text-gray-100 bg-gray-700 rounded-full">
                 <Users className="w-8 h-8" />
               </div>
               <h3 className="mb-2 text-xl font-semibold uppercase">Pelayanan Prima</h3>
               <p className='max-w-sm'>Tim kami siap memberikan pelayanan terbaik untuk kepuasan Anda.</p>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <main id="menu" className="container flex-grow px-4 py-8 mx-auto xl:px-[50px]">
+      <motion.main id="menu" className="container flex-grow px-4 py-8 mx-auto xl:px-[50px]" variants={itemVariants}>
         <h2 className="mb-6 text-3xl font-bold text-center">Menu Favorit Kami</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.slice(0, 4).map((product) => (
-            <Card key={product.name} className="flex flex-col h-full">
-              <CardHeader className="relative h-48">
-                <Image
-                  src={product.images}
-                  alt={product.name}
-                  className="object-cover w-full h-full rounded-t-lg"
-                  width={1000}
-                  height={1000}
-                />
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <CardTitle className="-mt-4 text-xl">{product.name}</CardTitle>
-                <CardDescription className="mt-2">
-                  {product.description?.length > 100 ? `${product.description.substring(0, 100)}...` : product.description}
-                </CardDescription>
-                <p className="mt-2 text-lg font-semibold">
-                  {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(product.price)}
-                </p>
-              </CardContent>
-              <CardFooter className="mt-auto">
-                <Button className="w-full" onClick={() => addToCart(product)}>
-                  Tambah ke Keranjang
-                </Button>
-              </CardFooter>
-            </Card>
+          {products.slice(0, 4).map((product, index) => (
+            <motion.div key={product.name} variants={itemVariants} custom={index}>
+              <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-lg">
+                <CardHeader className="relative h-48">
+                  <Image
+                    src={product.images}
+                    alt={product.name}
+                    className="object-cover w-full h-full rounded-t-lg"
+                    width={1000}
+                    height={1000}
+                  />
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <CardTitle className="-mt-4 text-xl">{product.name}</CardTitle>
+                  <CardDescription className="mt-2">
+                    {product.description?.length > 100 ? `${product.description.substring(0, 100)}...` : product.description}
+                  </CardDescription>
+                  <p className="mt-2 text-lg font-semibold">
+                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(product.price)}
+                  </p>
+                </CardContent>
+                <CardFooter className="mt-auto">
+                  <Button className="w-full" onClick={() => addToCart(product)}>
+                    Tambah ke Keranjang
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
           ))}
-
         </div>
         <div className="mt-12 text-center">
-          {/* <Button size="lg" variant="outline" onClick={() => toast({ title: "Lihat Semua Menu", description: "Fitur ini akan segera hadir!" })}> */}
-          <Button size="lg" variant="outline" onClick={() => router.push('/menu/list')}>
+          <Button size="lg" variant="outline" className="text-gray-800 border-gray-700 hover:bg-gray-100" onClick={() => router.push('/menu/list')}>
             Lihat Semua Menu <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>
-      </main>
+      </motion.main>
 
-      <footer id="kontak" className="mt-12 bg-gray-100 xl:px-[50px]">
+      <motion.footer id="kontak" className="mt-12 bg-gray-800 text-gray-100 xl:px-[50px]" variants={itemVariants}>
         <div className="container px-4 py-8 mx-auto">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div>
@@ -195,7 +218,7 @@ export default function HomePage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-                <Button type="submit">Langganan</Button>
+                <Button type="submit" className="text-gray-900 bg-gray-100 hover:bg-gray-200">Langganan</Button>
               </form>
             </div>
           </div>
@@ -203,7 +226,7 @@ export default function HomePage() {
             <p>&copy; 2024 WaroengKuh. Hak Cipta Dilindungi.</p>
           </div>
         </div>
-      </footer>
-    </div>
+      </motion.footer>
+    </motion.div>
   )
 }
