@@ -40,6 +40,9 @@ export default function CheckoutPage() {
     })
     const [errors, setErrors] = useState({})
 
+
+    const totalPriceItem = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
     useEffect(() => {
         if (!cartItems || cartItems.length === 0) {
             router.push('/')
@@ -57,8 +60,8 @@ export default function CheckoutPage() {
         setDistance(newDistance)
         const newShippingCost = calculateShippingCost(newDistance)
         setShippingCost(newShippingCost)
-        setTotal(1000000 + newShippingCost)
-    }, [selectedCity])
+        setTotal(totalPriceItem + newShippingCost)
+    }, [selectedCity, totalPriceItem])
 
     useEffect(() => {
         const filtered = Object.keys(cityDistances).filter(city =>
@@ -329,7 +332,7 @@ export default function CheckoutPage() {
                     <div className="space-y-2">
                         <div className="flex justify-between">
                             <span>Subtotal</span>
-                            <span>Rp 1.000.000</span>
+                            <span>Rp {totalPriceItem.toLocaleString()} </span>
                         </div>
                         <div className="flex justify-between">
                             <span>Ongkir</span>

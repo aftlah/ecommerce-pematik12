@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 const useCartStore = create((set) => {
-    const savedCartItems = JSON.parse(sessionStorage.getItem('cartItems')) || [];
+    const savedCartItems = JSON.parse(sessionStorage?.getItem('cartItems')) || [];
 
     const setCartItems = (cartItems) => {
         sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
