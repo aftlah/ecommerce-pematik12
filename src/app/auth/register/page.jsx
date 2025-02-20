@@ -6,12 +6,15 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/firebase/init'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
-import { Eye, EyeOff, Lock, Mail, User, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, Lock, Mail, Loader2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+
+// Force dynamic rendering (no SSR)
+export const dynamic = 'force-dynamic';
 
 export default function RegisterPage() {
     const [email, setEmail] = useState('')
@@ -60,11 +63,15 @@ export default function RegisterPage() {
         }
     }, [user, loading, router])
 
+    if (loading) {
+        return <div className="flex items-center justify-center min-h-screen">Loading...</div>
+    }
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <Card className="w-full max-w-md shadow-lg">
                 <CardHeader className="space-y-1">
-                <CardTitle className="text-2xl font-bold text-center">Selamat Datang di <br /> Waroengkuh</CardTitle>
+                    <CardTitle className="text-2xl font-bold text-center">Selamat Datang di <br /> Waroengkuh</CardTitle>
                     <CardDescription className="text-center">
                         Masukkan detail Anda untuk membuat akun baru
                     </CardDescription>
