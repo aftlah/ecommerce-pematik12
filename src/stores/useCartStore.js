@@ -4,7 +4,10 @@ const useCartStore = create((set) => {
     const savedCartItems = JSON.parse(sessionStorage?.getItem('cartItems')) || [];
 
     const setCartItems = (cartItems) => {
-        sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        if (typeof window !== 'undefined') {
+            sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+        }
+        // sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
         set({ cartItems });
     };
 
@@ -46,7 +49,10 @@ const useCartStore = create((set) => {
 
         clearCart: () =>
             set(() => {
-                sessionStorage.removeItem('cartItems');
+                if (typeof window !== 'undefined') {
+                    sessionStorage.removeItem('cartItems');
+                }
+                // sessionStorage.removeItem('cartItems');
                 return { cartItems: [] };
             }),
 
